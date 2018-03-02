@@ -24,7 +24,7 @@ class User extends Model implements AuthenticatableContract,
     protected $table = 'users';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
@@ -36,9 +36,4 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
-    
-        public function microposts()
-    {
-        return $this->hasMany(Micropost::class);
-    }
 }
