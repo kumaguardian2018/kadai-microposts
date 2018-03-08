@@ -37,7 +37,7 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $hidden = ['password', 'remember_token'];
     
-        public function microposts()
+    public function microposts()
     {
         return $this->hasMany(Micropost::class);
     }
@@ -52,48 +52,100 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsToMany(User::class, 'user_follow', 'follow_id', 'user_id')->withTimestamps();
     }
     
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'user_favorite', 'user_id', 'micropost_id')->withTimestamps();
+    }
+    
+    public function likeds()
+    {
+        return $this->belongsToMany(User::class, 'user_favorite', 'micropost_id', 'user_id')->withTimestamps();
+    }
+    
     public function follow($userId) { // 既にフォローしているかの確認 
 
-    $exist = $this->is_following($userId); // 自分自身ではないかの確認 
+        $exist = $this->is_following($userId); // 自分自身ではないかの確認 
 
-    $its_me = $this->id == $userId;
+        $its_me = $this->id == $userId;
 
-    if ($exist || $its_me) {
+        if ($exist || $its_me) {
 
         // 既にフォローしていれば何もしない
 
-        return false;
+           return false;
 
-    } else {
+        } else {
 
         // 未フォローであればフォローする
 
-        $this->followings()->attach($userId);
+            $this->followings()->attach($userId);
 
-        return true;
-
+            return true;
+        }
     }
-}
 
     public function unfollow($userId)
     {
     // 既にフォローしているかの確認
-    $exist = $this->is_following($userId);
+          $exist = $this->is_following($userId);
     // 自分自身ではないかの確認
-    $its_me = $this->id == $userId;
+           $its_me = $this->id == $userId;
 
-    if ($exist && !$its_me) {
+           if ($exist && !$its_me) {
         // 既にフォローしていればフォローを外す
-        $this->followings()->detach($userId);
-        return true;
-    } else {
+           $this->followings()->detach($userId);
+            return true;
+        } else {
         // 未フォローであれば何もしない
-        return false;
+            return false;
+        }
+     }
+
+    public function favorite($userId) { //すでにfavoriteしているか確認？
+   
+          $exist = $this->is_like($userId); //自分自身ではないかの確認？必要？
+   
+          $its_me = $this->id == $userId;
+   
+          if ($exist || $its_me) {
+           
+           //すでにfavoriteしていたら何もしない？
+          
+             return false;
+           
+         } else {
+           
+           //favoriteしていなかったらfavoriteする？
+           
+             $this->likes()->attach($userId);
+           
+             return true;
+         }
     }
-}
+       
+    public function unfavorite($userId)
+        {
+        //すでにfavoriteしているかの確認？
+           $exist = $this->is_like($userId);
+        //自分自身ではないかの確認？必要？
+           $its_me = $this->id == $userId;
+        
+           if ($exist && !$its_me) {
+            //すでにfavoriteしていればfavoriteを外す
+               $this->likes()->detach($userId);
+               return true;
+            } else {
+            // likeしていなかったら何もしない
+               return false;
+            }  
+         }    
 
 public function is_following($userId) {
     return $this->followings()->where('follow_id', $userId)->exists();
+}
+
+public function is_like($userId) {
+    return $this->likes()->where('micropost_id', $userId)->exists();
 }
 
 public function feed_microposts()
@@ -101,5 +153,5 @@ public function feed_microposts()
         $follow_user_ids = $this->followings()->lists('users.id')->toArray();
         $follow_user_ids[] = $this->id;
         return Micropost::whereIn('user_id', $follow_user_ids);
-    }
+    }    
 }
