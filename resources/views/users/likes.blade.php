@@ -17,7 +17,7 @@
             <ul class="nav nav-tabs nav-justified">
                 <li role="presentation" class="{{ Request::is('users/' . $user->id) ? 'active' : '' }}"><a href="{{ route('users.show', ['id' => $user->id]) }}">Microposts <span class="badge">{{ $count_microposts }}</span></a></li>
                 <li role="presentation" class="{{ Request::is('users/*/likes') ? 'active' : '' }}"><a href="{{ route('users.likes', ['id' => $user->id]) }}">Likes <span class="badge">{{ $count_likes }}</span></a></li>
-                <li role="presentation" class="{{ Request::is('users/*/likeds') ? 'active' : '' }}"><a href="{{ route('users.likeds', ['id' => $user->id]) }}">Likeds <span class="badge">{{ $count_Likeds }}</span></a></li>
+                <li role="presentation" class="{{ Request::is('users/*/likeds') ? 'active' : '' }}"><a href="{{ route('users.likeds', ['id' => $user->id]) }}">Likeds <span class="badge">{{ $count_likeds }}</span></a></li>
             </ul>
             @include('users.users', ['users' => $users])
         </div>

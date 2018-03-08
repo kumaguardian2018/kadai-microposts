@@ -1,5 +1,5 @@
 @if (Auth::user()->id != $user->id) 
-    @if (Auth::user()->is_liked($user->id))
+    @if (Auth::user()->is_like($user->id))
         {!! Form::open(['route' => ['user.unfavorite', $user->id], 'method' => 'delete']) !!}
             {!! Form::submit('Unfavorite', ['class' => "btn btn-danger btn-block"]) !!}
         {!! Form::close() !!}
