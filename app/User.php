@@ -54,9 +54,9 @@ class User extends Model implements AuthenticatableContract,
     
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'user_favorite', 'user_id', 'micropost_id')->withTimestamps();
+        return $this->belongsToMany(Micropost::class, 'user_favorite', 'user_id', 'micropost_id')->withTimestamps();
     }
-    
+
     public function likeds()
     {
         return $this->belongsToMany(User::class, 'user_favorite', 'micropost_id', 'user_id')->withTimestamps();
@@ -101,13 +101,10 @@ class User extends Model implements AuthenticatableContract,
         }
      }
 
-    public function favorite($userId) { //すでにfavoriteしているか確認？
+    public function favorite($micropostId) { //すでにfavoriteしているか確認？
+          $exist = $this->is_like($micropostId); //自分自身ではないかの確認？必要？
    
-          $exist = $this->is_like($userId); //自分自身ではないかの確認？必要？
-   
-          $its_me = $this->id == $userId;
-   
-          if ($exist || $its_me) {
+          if ($exist) {
            
            //すでにfavoriteしていたら何もしない？
           
@@ -117,22 +114,18 @@ class User extends Model implements AuthenticatableContract,
            
            //favoriteしていなかったらfavoriteする？
            
-             $this->likes()->attach($userId);
-           
+             $this->likes()->attach($micropostId);
              return true;
          }
     }
        
-    public function unfavorite($userId)
+    public function unfavorite($micropostId)
         {
         //すでにfavoriteしているかの確認？
-           $exist = $this->is_like($userId);
-        //自分自身ではないかの確認？必要？
-           $its_me = $this->id == $userId;
-        
-           if ($exist && !$its_me) {
+           $exist = $this->is_like($micropostId);
+           if ($exist) {
             //すでにfavoriteしていればfavoriteを外す
-               $this->likes()->detach($userId);
+               $this->likes()->detach($micropostId);
                return true;
             } else {
             // likeしていなかったら何もしない
@@ -144,8 +137,8 @@ public function is_following($userId) {
     return $this->followings()->where('follow_id', $userId)->exists();
 }
 
-public function is_like($userId) {
-    return $this->likes()->where('micropost_id', $userId)->exists();
+public function is_like($micropostId) {
+    return $this->likes()->where('micropost_id', $micropostId)->exists();
 }
 
 public function feed_microposts()

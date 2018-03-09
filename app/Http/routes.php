@@ -32,10 +32,11 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
     Route::group(['prefix' => 'users/{id}'], function () {        
-        Route::post('favorite', 'UserFavoriteController@store')->name('user.favorite');
-        Route::delete('unfavorite', 'UserFavoriteController@destroy')->name('user.unfavorite');
+        Route::post('favorite', 'UserFavoriteController@store')->name('users.favorites');
+        Route::delete('unfavorite', 'UserFavoriteController@destroy')->name('users.unfavorites');
         Route::get('likes', 'UsersController@likes')->name('users.likes');
         Route::get('likeds', 'UsersController@likeds')->name('users.likeds');
+        Route::post('favorite', 'UserFavoriteController@store')->name('users.favorites');
     });
 
    Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);

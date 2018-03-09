@@ -1,6 +1,5 @@
 <ul class="media-list">
 @foreach ($microposts as $micropost)
-    <?php $user = $micropost->user; ?>
     <li class="media">
         <div class="media-left">
             <img class="media-object img-rounded" src="{{ Gravatar::src($user->email, 50) }}" alt="">
@@ -18,7 +17,7 @@
                         {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
                     {!! Form::close() !!}
                 @endif
-                @include('user_favorite.favorite_button', ['user' => $user])
+                @include('user_favorite.favorite_button', ['user' => $user, 'micropost' => $micropost])
             </div>
         </div>
     </li>
