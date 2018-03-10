@@ -29,7 +29,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('followers', 'UsersController@followers')->name('users.followers');
     });    
 
-Route::group(['middleware' => 'auth'], function () {
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
     Route::group(['prefix' => 'users/{id}'], function () {        
         Route::post('favorite', 'UserFavoriteController@store')->name('users.favorites');
@@ -40,5 +39,4 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
    Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);
-});
 });
