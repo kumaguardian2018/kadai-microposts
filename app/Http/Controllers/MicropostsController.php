@@ -94,8 +94,7 @@ class MicropostsController extends Controller
 
         if (\Auth::user()->id === $micropost->user_id) {
             $micropost->delete();
-        }
-
+        }    
         return redirect()->back();
     }
 }

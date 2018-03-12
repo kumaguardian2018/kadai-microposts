@@ -87,3 +87,4 @@ class UserFavoriteController extends Controller
         return redirect()->back();
     }
 }
+
